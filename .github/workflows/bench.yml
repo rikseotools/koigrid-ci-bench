@@ -1,0 +1,21 @@
+name: bench
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  ubuntu-latest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Medir
+        run: |
+          bash bench.sh 3 | tee resultados.jsonl
+          # Cada medida como anotación: se lee por la API pública de check-runs sin credencial.
+          while read -r l; do echo "::notice title=bench::$l"; done < resultados.jsonl
