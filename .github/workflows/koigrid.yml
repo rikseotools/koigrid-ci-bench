@@ -1,0 +1,19 @@
+name: koigrid-runner
+# Prueba de los runners de CI de koigrid (ficha 90188982): el job corre en una VM de un solo uso de koigrid.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  koigrid-2c:
+    runs-on: koigrid-2c
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Medir
+        run: |
+          bash bench.sh 1 | tee resultados.jsonl
+          while read -r l; do echo "::notice title=bench-koigrid::$l"; done < resultados.jsonl
