@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: 22
       - name: Medir
+        # shell: bash explícito = bash -eo pipefail: sin él, `bench.sh | tee` daba éxito aunque bench.sh fallara.
+        shell: bash
         run: |
           bash bench.sh 1 | tee resultados.jsonl
           while read -r l; do echo "::notice title=bench-koigrid::$l"; done < resultados.jsonl
